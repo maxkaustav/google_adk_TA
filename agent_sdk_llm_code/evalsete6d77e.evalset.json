@@ -1,0 +1,69 @@
+{
+  "eval_set_id": "evalsete6d77e",
+  "name": "evalsete6d77e",
+  "eval_cases": [
+    {
+      "eval_id": "case677838",
+      "conversation": [
+        {
+          "invocation_id": "e-b42bba15-488b-4220-ae5d-7a4ee4961fee",
+          "user_content": {
+            "parts": [
+              {
+                "text": "what is 2+2"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "2+2 equals 4."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {},
+          "creation_timestamp": 1771750459.429725
+        }
+      ],
+      "session_input": {
+        "app_name": "agent_sdk_llm_code",
+        "user_id": "user"
+      },
+      "creation_timestamp": 1771750530.2737522
+    },
+    {
+      "eval_id": "case9964e7",
+      "conversation": [
+        {
+          "invocation_id": "e-8ea822e2-358d-4d45-9d74-838aba930e19",
+          "user_content": {
+            "parts": [
+              {
+                "text": "what is 2+2"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "4"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {},
+          "creation_timestamp": 1771750552.063861
+        }
+      ],
+      "session_input": {
+        "app_name": "agent_sdk_llm_code",
+        "user_id": "user"
+      },
+      "creation_timestamp": 1771750618.5754752
+    }
+  ],
+  "creation_timestamp": 1771750525.204253
+}
