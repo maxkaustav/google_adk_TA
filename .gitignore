@@ -1,0 +1,6 @@
+# Ignore .env files in all directories
+.env
+.env.*
+
+# Ignore Python bytecode cache folders
+__pycache__/
