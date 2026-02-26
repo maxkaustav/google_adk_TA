@@ -45,30 +45,6 @@ def get_financial_context(tickers: List[str]) -> Dict[str, str]:
             
     return financial_data
 
-def save_news_to_markdown(filename: str, content: str) -> Dict[str, str]:
-    """
-    Saves the given content to a Markdown file in the current directory.
-
-    Args:
-        filename: The name of the file to save (e.g., 'ai_news.md').
-        content: The Markdown-formatted string to write to the file.
-
-    Returns:
-        A dictionary with the status of the operation.
-    """
-    try:
-        if not filename.endswith(".md"):
-            filename += ".md"
-        current_directory = pathlib.Path.cwd()
-        file_path = current_directory / filename
-        file_path.write_text(content, encoding="utf-8")
-        return {
-            "status": "success",
-            "message": f"Successfully saved news to {file_path.resolve()}",
-        }
-    except Exception as e:
-        return {"status": "error", "message": f"Failed to save file: {str(e)}"}
-
 BLOCKED_DOMAINS = [
     "wikipedia.org",      # General info, not latest news
     "reddit.com",         # Discussion forums, not primary news
@@ -132,41 +108,20 @@ def inject_process_log_after_search(tool, args, tool_context, tool_response):
 root_agent = Agent(
     name="ai_news_research_coordinator",
     model="gemini-2.5-flash-native-audio-preview-09-2025",
-    tools=[google_search, get_financial_context, save_news_to_markdown],
+    tools=[google_search, get_financial_context],
     instruction="""
     **Your Core Identity and Sole Purpose:**
-    You are a specialized AI News Assistant that creates structured podcast content. Your sole and exclusive purpose is 
-    to find and summarize recent news about Artificial Intelligence and format it into comprehensive podcast outlines.
+    You are an assistant who specializes on assisting traders with market news for a particular stock or sector.
 
     **Execution Plan:**
 
     1.  
-        *   **Step 1:** Call `google_search` to find 5 recent AI news articles.
+        *   **Step 1:** Call `google_search` to find 3 recent news articles regarding a specific stock or sector.
         *   **Step 2:** Analyze the results to find company stock tickers.
         *   **Step 3:** Call `get_financial_context` with the list of tickers.
-        *   **Step 4:** Format all gathered information into a single Markdown string, 
-            following the **Required Report Schema**.
-        *   **Step 5:** Call `save_news_to_markdown` with the filename `ai_research_report.md` and the 
-            formatted Markdown content.
+        *   **Step 4:** Find a correlation between the news articles and the financial context data. Generate a report.
+        *   **Step 5:** Display the output on the console.
 
-    2.  **After `save_news_to_markdown` succeeds, your final response to the user MUST be:** "All done. 
-        I've compiled the research report with the latest financial context and saved it to `ai_research_report.md`."
-
-    **Required Report Schema:**
-    ```markdown
-    # AI Industry News Report
-
-    ## Top Headlines
-
-    ### 1. {News Headline 1}
-    *   **Company:** {Company Name} ({Ticker Symbol})
-    *   **Market Data:** {Stock Price and % Change from get_financial_context}
-    *   **Summary:** {Brief, 1-2 sentence summary of the news.}
-    *   **Process Log:** {`process_log`: A list of strings describing the filtering actions performed, 
-        including which domains were sourced.}
-
-    (Continue for all news items)
-    ```
 
     **Understanding Callback-Modified Tool Outputs:**
     The `google_search` tool is enhanced by pre- and post-processing callbacks. 
@@ -178,15 +133,10 @@ root_agent = Agent(
     You have a before tool callback "filter_news_sources_callback" that will automatically intercepts or 
     blocks your tool calls. Ensure you call it before each tool.
 
-    **When Testing Callbacks:**
-    If users ask you to test the callback system, be conversational and explain what's happening:
-    - Acknowledge when callbacks modify your search queries
-    - Describe the policy enforcement you observe
-    - Help users understand how the layered control system works in practice
-
     **Crucial Operational Rule:**
     Do NOT show any intermediate content (raw search results, draft summaries, or processing steps) in your responses. 
-    Your entire operation is a background pipeline that should culminate in a single, clean final answer.  
+    Your entire operation is a background pipeline that should culminate in a single, clean final answer.
+    Speak and also write the final output to the console.
     """,
     before_tool_callback=[
         filter_news_sources_callback,         # Exclude certain domains
